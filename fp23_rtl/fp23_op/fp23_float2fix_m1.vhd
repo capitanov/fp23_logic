@@ -11,7 +11,7 @@
 --
 -------------------------------------------------------------------------------
 --
---	Version 1.5  15.08.2013
+--	Version 1.0  15.08.2013
 --			   	 Description:
 --					Bus width for:
 --					din = 23
@@ -35,20 +35,32 @@
 --					> 2 DSP48E1 blocks used (MEGA_DSP);
 --				
 --	Version 1.2  14.05.2015
---
 --					> SLICEL logic has been simplified;	  
 --
 --	Version 1.3  01.11.2015
---
 --					> remove 1 block DSP48E1;
 --
 --	Version 1.4  01.11.2015
---
 --					> Clear all unrouted signals and components;  
 -- 
 --	Version 1.5  01.02.2016
---
 --					> Add Barrel shifter instead of DSP48E1;  
+--
+--	Version 1.6  04.04.2016
+--					> Careful: check all conditions of input fp data 
+--						Example: exp = 0x1F, sig = 0, man = 0x0;  
+-- 
+--	Version 1.7  05.04.2016
+--					> Data out width is only 16 bits. 
+--	
+--	Version 1.8  07.04.2016
+--					> Add constant for negative data converter. 
+--
+--	Version 1.9  22.01.2018
+--					> Change exp shift logic. 
+--
+--	Version 1.10 23.01.2018
+--					> Overflow and underflow logic has been improved. 
 --
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------
@@ -81,22 +93,21 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
-library unisim;
-use unisim.vcomponents.LUT6;
+--library unisim;
+--use unisim.vcomponents.LUT6;
 
 library work;
 use work.fp_m1_pkg.fp23_data;
-use work.reduce_pack.all;
 
 entity fp23_float2fix_m1 is
 	generic(
-		td			: time:=1ns --! Time delay for simulation
+		DW			: integer:=16 --! Output data width
 	);
 	port(
 		din			: in  fp23_data;						--! Float input data	
 		ena			: in  std_logic;						--! Data enable                        
 		scale		: in  std_logic_vector(05 downto 0);	--! Scale factor 	   
-		dout		: out std_logic_vector(15 downto 0);	--! Fixed output data
+		dout		: out std_logic_vector(DW-1 downto 0);	--! Fixed output data
 		vld			: out std_logic;						--! Data out valid
 		clk			: in  std_logic;						--! Clock
 		reset		: in  std_logic;						--! Negative reset			
@@ -106,112 +117,130 @@ end fp23_float2fix_m1;
 
 architecture fp23_float2fix_m1 of fp23_float2fix_m1 is 
 
-component sp_addsub_m1 is
-	generic(	
-		N 		: integer
-	);
-	port(
-		data_a 	: in  std_logic_vector(N-1 downto 0);
-		data_b 	: in  std_logic_vector(N-1 downto 0);
-		data_c 	: out std_logic_vector(N-1 downto 0);
-		add_sub	: in  std_logic;  -- '0' - add, '1' - sub
-		cin     : in  std_logic:='0';
-		cout    : out std_logic;
-		clk    	: in  std_logic;
-		ce 		: in  std_logic:='1';	
-		aclr  	: in  std_logic:='1'
-	);
-end component;
-
-signal exp_dif			: std_logic_vector(5 downto 0);	  --
-signal mant				: std_logic_vector(16 downto 0);
+signal exp_dif			: std_logic_vector(4 downto 0);
+signal exp_dift			: std_logic_vector(5 downto 0);
+signal mant				: std_logic_vector(DW downto 0);
 signal rstp				: std_logic;
 signal implied			: std_logic;
-signal frac				: std_logic_vector(15 downto 0);  -- 
+signal frac				: std_logic_vector(DW-1 downto 0);  -- 
 signal sign_z			: std_logic_vector(2 downto 0);	
 signal valid			: std_logic_vector(3 downto 0);	
 signal shift			: std_logic_vector(5 downto 0);
 
-signal man_shift		: std_logic_vector(31 downto 0);
-signal norm_man			: std_logic_vector(15 downto 0);
+--signal man_shift		: std_logic_vector(31 downto 0);
+signal norm_man			: std_logic_vector(DW-1 downto 0);
 
 signal overflow_i		: std_logic;
+signal exp_null			: std_logic; 
+signal exp_nullz		: std_logic; 
+signal exp_nullt		: std_logic; 
+
+signal exp_cmp			: std_logic;
+signal exp_ovr			: std_logic;
 
 begin	
   
-rstp <= not reset after td when rising_edge(clk); 
-shift <= scale after td when rising_edge(clk);	
+rstp <= not reset when rising_edge(clk); 
+shift <= scale when rising_edge(clk);	
 
--- (EXP(A) - SCALE)
-EXP_DIFF: sp_addsub_m1
-	generic map(N => 6) 
-	port map(
-		data_a 	=> din.exp, 
-		data_b 	=> shift, 
-		data_c 	=> exp_dif, 		
-		add_sub	=> '0', 				
-		cin     => '1',--0 	
-		--cout    => c_zero,	
-		clk    	=> clk, 				
-		ce 		=> valid(0), 						
-		aclr  	=> rstp 				
-	); 
+---- exp difference ----	
+pr_exp: process(clk) is
+begin
+	if rising_edge(clk) then
+		exp_dift <= din.exp - shift;
+	end if;
+end process;	
+
+pr_cmp: process(clk) is
+begin
+	if rising_edge(clk) then
+		if (din.exp < shift) then
+			exp_cmp <= '1';
+		else
+			exp_cmp <= '0';
+		end if;
+	end if;
+end process;
+
+exp_null <= exp_cmp when rising_edge(clk);   	
+exp_nullz <= exp_null when rising_edge(clk); 
+
+pr_ovf: process(clk) is
+begin
+	if rising_edge(clk) then
+		if ("001110" < exp_dift) then
+			exp_ovr <= '1';
+		else
+			exp_ovr <= '0';
+		end if;
+	end if;
+end process;
+
+exp_nullt <= exp_ovr when rising_edge(clk);   	
+
 
 -- implied for mantissa and find sign
 pr_impl: process(clk) is
 begin 
 	if rising_edge(clk) then
-		if (rstp = '1') then
-			implied <= '0' after td;
-		else
-			if (din.exp = "000000") then
-				implied	<='0' after td;
-			else 
-				implied	<='1' after td;
-			end if;
-		end if;	
+		if (din.exp = x"00") then
+			implied	<='0';
+		else 
+			implied	<='1';
+		end if;
 	end if;
 end process;	
 
 -- find fraction --
-frac <= din.man after td when rising_edge(clk);
+frac <= din.man when rising_edge(clk);
 pr_man: process(clk) is
 begin 
 	if rising_edge(clk) then
-		if (rstp = '1') then
-			mant <= (others => '0');	
-		else
-			if (valid(0) = '1') then
-				mant <=	implied & frac after td;
-			end if;
-		end if;
+		mant <=	implied & frac;
 	end if;
 end process;
-sign_z <= sign_z(1 downto 0) & din.sig after td when rising_edge(clk);
+sign_z <= sign_z(sign_z'left-1 downto 0) & din.sig when rising_edge(clk);
 
--- barrel shifter --
-man_shift <= "000" & x"000" & mant;
-norm_man <= man_shift(31-conv_integer(exp_dif(3 downto 0)) downto 16-conv_integer(exp_dif(3 downto 0))) after td when rising_edge(clk); 	
+-- barrel shifter --	
+exp_dif <= not exp_dift(4 downto 0) when rising_edge(clk);
+norm_man <= STD_LOGIC_VECTOR(SHR(UNSIGNED(mant(DW downto 1)), UNSIGNED(exp_dif(3 downto 0)))) when rising_edge(clk);
 
 -- data valid and data out --
 pr_out: process(clk) is
 begin
 	if rising_edge(clk) then
-		if (rstp = '1') then
-			dout <= (others => '0') after td;	
-		elsif (valid(2) = '1') then	
-			for ii in 0 to 15 loop
-				dout(ii) <=	norm_man(ii) xor sign_z(2) after td;	 
-			end loop;
+		if (rstp = '1') then 
+			dout <= (others => '0');
+		else			
+			if (exp_nullz = '1') then
+				dout <= (others => '0');
+			else
+				if (exp_nullt = '1') then
+					dout(DW-1) <= sign_z(2);
+					for ii in 0 to DW-2 loop
+						dout(ii) <=	not sign_z(2);	 
+					end loop;		
+				else
+					if (sign_z(2) = '1') then
+						dout <=	(not norm_man) + 1;
+					else
+						dout <=	norm_man;
+					end if;				
+				end if;					
+			end if;
 		end if;
 	end if;	
 end process;
 
-valid <= valid(2 downto 0) & ena after td when rising_edge(clk);	
-vld <= valid(3);	
+valid <= valid(valid'left-1 downto 0) & ena when rising_edge(clk);	
+vld <= valid(valid'left-1) when rising_edge(clk);	
 
--- overflow --	
-overflow_i <= and_reduce(exp_dif) after td when rising_edge(clk);
-overflow <= overflow_i after td when rising_edge(clk); 
+pr_ovr: process(clk) is
+begin 
+	if rising_edge(clk) then
+		overflow_i <= exp_nullt and not exp_nullz;--(exp_hi or exp_lo);
+	end if;
+end process;
+overflow <= overflow_i when rising_edge(clk); 
 
 end fp23_float2fix_m1;
