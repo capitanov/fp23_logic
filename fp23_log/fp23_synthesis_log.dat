@@ -7,88 +7,93 @@
 --
 -- Description : Synthesis log file: 01/12/2015
 --
+-- Changelog   : Improved logic units: 11/08/2018
+-- 
 -----------------------------------------------------------
 -----------------------------------------------------------
 
-Top Level Output File Name         : fp23_fix2float_m1.ngc
-Primitive and Black Box Usage:
-------------------------------
-# BELS                             : 135
-#      GND                         : 2
-#      INV                         : 7
-#      LUT2                        : 15
-#      LUT3                        : 20
-#      LUT4                        : 32
-#      LUT5                        : 10
-#      LUT6                        : 21
-#      MUXCY                       : 12
-#      VCC                         : 2
-#      XORCY                       : 12
-# FlipFlops/Latches                : 166
-# Shift Registers                  : 18
-#      SRLC16E                     : 18
-# DSPs                             : 0
-#      DSP48E1                     : 0
+Top Level Output File Name         : fp23_fix2float_m1
+
+OLD SCHEME:                NEW SCHEME:
+
++------+-------+------+    +------+-------+------+			
+|      |Cell   |Count |    |      |Cell   |Count |         
++------+-------+------+    +------+-------+------+         
+|2     |CARRY8 |     4|    |2     |CARRY8 |     2|         
+|3     |LUT1   |     0|    |3     |LUT1   |    20|         
+|4     |LUT2   |    15|    |4     |LUT2   |     4|         
+|5     |LUT3   |    20|    |5     |LUT3   |    21|         
+|6     |LUT4   |    32|    |6     |LUT4   |     6|         
+|7     |LUT5   |    10|    |7     |LUT5   |    11|         
+|8     |LUT6   |    21|    |8     |LUT6   |    22|         
+|9     |SRL16E |    18|    |9     |SRL16E |     2|         
+|10    |FDRE   |   166|    |10    |FDRE   |   118|         
+|11    |IBUF   |    19|    |11    |IBUF   |    19|         
+|12    |OBUF   |    24|    |12    |OBUF   |    24|         
++------+-------+------+    +------+-------+------+         
 
 
-Top Level Output File Name         : fp23_float2fix_m1.ngc
-Primitive and Black Box Usage:
-------------------------------
-# BELS                             : 85
-#      GND                         : 4
-#      INV                         : 1
-#      LUT2                        : 1
-#      LUT3                        : 10
-#      LUT4                        : 3
-#      LUT5                        : 7
-#      LUT6                        : 37
-#      MUXCY                       : 6
-#      MUXF7                       : 8
-#      VCC                         : 2
-#      XORCY                       : 6
-# FlipFlops/Latches                : 83
-# Shift Registers                  : 2
-#      SRLC16E                     : 2
-# DSPs                             : 0
-#      DSP48E1                     : 0
+Top Level Output File Name         : fp23_float2fix_m1
+
+OLD SCHEME:                NEW SCHEME:
+
++------+-------+------+    +------+-------+------+			
+|      |Cell   |Count |    |      |Cell   |Count |         
++------+-------+------+    +------+-------+------+         
+|2     |CARRY8 |     2|    |2     |CARRY8 |     1|         
+|3     |LUT1   |     4|    |3     |LUT1   |     5|         
+|4     |LUT2   |     1|    |4     |LUT2   |    11|         
+|5     |LUT3   |    10|    |5     |LUT3   |    10|         
+|6     |LUT4   |     3|    |6     |LUT4   |    11|         
+|7     |LUT5   |     7|    |7     |LUT5   |    14|         
+|8     |LUT6   |    37|    |8     |LUT6   |    27|         
+|9     |SRL16E |     2|    |9     |SRL16E |     2|         
+|10    |FDRE   |    83|    |10    |FDRE   |    91|         
+|11    |IBUF   |    31|    |11    |IBUF   |    31|         
+|12    |OBUF   |    18|    |12    |OBUF   |    18|         
++------+-------+------+    +------+-------+------+   
 
 
-Top Level Output File Name         : fp23_addsub_m1.ngc
-Primitive and Black Box Usage:
-------------------------------
-# BELS                             : 349
-#      GND                         : 3
-#      INV                         : 7
-#      LUT2                        : 6
-#      LUT3                        : 116
-#      LUT4                        : 38
-#      LUT5                        : 13
-#      LUT6                        : 49
-#      MUXCY                       : 57
-#      VCC                         : 3
-#      XORCY                       : 57
-# FlipFlops/Latches                : 380
-# Shift Registers                  : 49
-#      SRLC16E                     : 49
-# DSPs                             : 0
-#      DSP48E1                     : 0
+
+Top Level Output File Name         : fp23_addsub_m1
+
+OLD SCHEME:                NEW SCHEME:
+
++------+-------+------+    +------+-------+------+
+|      |Cell   |Count |    |      |Cell   |Count |
++------+-------+------+    +------+-------+------+
+|2     |CARRY8 |    18|    |2     |CARRY8 |     7|
+|3     |LUT1   |     7|    |3     |LUT1   |     6|
+|4     |LUT2   |     6|    |4     |LUT2   |    17|
+|5     |LUT3   |   116|    |5     |LUT3   |    75|
+|6     |LUT4   |    38|    |6     |LUT4   |    41|
+|7     |LUT5   |    13|    |7     |LUT5   |    20|
+|8     |LUT6   |    49|    |8     |LUT6   |    47|
+|9     |SRL16E |    49|    |9     |SRL16E |    26|
+|10    |FDRE   |   380|    |10    |FDRE   |   279|
+|11    |IBUF   |    50|    |11    |IBUF   |    50|
+|12    |OBUF   |    24|    |12    |OBUF   |    24|
++------+-------+------+    +------+-------+------+
 
 
-Top Level Output File Name         : fp23_mult_m1.ngc
-Primitive and Black Box Usage:
-------------------------------
-# BELS                             : 61
-#      GND                         : 1
-#      INV                         : 1
-#      LUT2                        : 2
-#      LUT3                        : 29
-#      LUT4                        : 1
-#      LUT6                        : 2
-#      MUXCY                       : 12
-#      VCC                         : 1
-#      XORCY                       : 12
-# FlipFlops/Latches                : 69
-# Shift Registers                  : 7
-#      SRLC16E                     : 7
-# DSPs                             : 1
-#      DSP48E1                     : 1
+
+Top Level Output File Name         : fp23_mult_m1
+
+OLD SCHEME:                NEW SCHEME:
+
++------+-------+------+    +------+--------+------+
+|      |Cell   |Count |    |      |Cell    |Count |
++------+-------+------+    +------+--------+------+
+|2     |CARRY8 |     3|    |2     |CARRY8  |     1|
+|3     |DSP48E1|     2|    |3     |DSP48E1 |     1|
+|3     |LUT1   |     1|    |4     |LUT1    |     2|
+|4     |LUT2   |     2|    |5     |LUT2    |    10|
+|5     |LUT3   |    29|    |6     |LUT3    |    18|
+|6     |LUT4   |     1|    |7     |LUT4    |     1|
+|7     |LUT5   |     2|    |8     |LUT5    |     2|
+|8     |LUT6   |     2|    |9     |LUT6    |     3|
+|9     |SRL16E |     7|    |10    |SRL16E  |     3|
+|10    |FDRE   |    69|    |11    |FDRE    |    81|
+|11    |IBUF   |    50|    |12    |IBUF    |    49|
+|12    |OBUF   |    24|    |13    |OBUF    |    24|
++------+-------+------+    +------+--------+------+
