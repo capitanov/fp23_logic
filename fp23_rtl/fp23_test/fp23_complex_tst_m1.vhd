@@ -108,7 +108,7 @@ bre_z <= BRE after td when rising_edge(clk);
 bim_z <= BIM after td when rising_edge(clk);
 
 ---------------- FIX2FLOAT CONVERTER ----------------
-ARE_CONV : entity work.fp23_fix2float_m1
+ARE_CONV : entity work.fp23_fix2float
 	generic map( td	=> td)
 	port map (
 		din 		=> are_z,
@@ -119,7 +119,7 @@ ARE_CONV : entity work.fp23_fix2float_m1
 		clk 		=> clk
 	);	
 	
-AIM_CONV : entity work.fp23_fix2float_m1
+AIM_CONV : entity work.fp23_fix2float
 	generic map( td	=> td)
 	port map (
 		din 		=> aim_z,
@@ -130,7 +130,7 @@ AIM_CONV : entity work.fp23_fix2float_m1
 		clk 		=> clk
 	);
 	
-BRE_CONV : entity work.fp23_fix2float_m1
+BRE_CONV : entity work.fp23_fix2float
 	generic map( td	=> td)
 	port map (
 		din 		=> bre_z,
@@ -141,7 +141,7 @@ BRE_CONV : entity work.fp23_fix2float_m1
 		clk 		=> clk
 	);	
 	
-BIM_CONV : entity work.fp23_fix2float_m1
+BIM_CONV : entity work.fp23_fix2float
 	port map (
 		din 		=> bim_z,
 		ena 		=> ena_z(3),
@@ -152,7 +152,7 @@ BIM_CONV : entity work.fp23_fix2float_m1
 	);		
 	
 ---------------- FlOAT MULTIPLY A*B ----------------		
-ARExBRE : entity work.fp23_mult_m1
+ARExBRE : entity work.fp23_mult
 	generic map( td	=> td)
 	port map (
 		aa 		=> fp23_aa.re,	
@@ -164,7 +164,7 @@ ARExBRE : entity work.fp23_mult_m1
 		clk 	=> clk
 	);	
 	
-AIMxBIM : entity work.fp23_mult_m1
+AIMxBIM : entity work.fp23_mult
 	port map(
 		aa 		=> fp23_aa.im,	
 		bb 		=> fp23_bb.im,	
@@ -176,7 +176,7 @@ AIMxBIM : entity work.fp23_mult_m1
 	);	
 	
 	
-ARExBIM : entity work.fp23_mult_m1
+ARExBIM : entity work.fp23_mult
 	generic map( td	=> td)
 	port map (
 		aa 		=> fp23_aa.re,	
@@ -188,7 +188,7 @@ ARExBIM : entity work.fp23_mult_m1
 		clk 	=> clk
 	);		
 	
-AIMxBRE : entity work.fp23_mult_m1
+AIMxBRE : entity work.fp23_mult
 	generic map( td	=> td)
 	port map (
 		aa 		=> fp23_aa.im,	
@@ -201,7 +201,7 @@ AIMxBRE : entity work.fp23_mult_m1
 	);		
 		
 ---------------- FlOAT ADD/SUB +/- ----------------	
-AB_ADD : entity work.fp23_addsub_m1
+AB_ADD : entity work.fp23_addsub
 	generic map( td	=> td)
 	port map (
 		aa 		=> fp23_are_bim,	
@@ -214,7 +214,7 @@ AB_ADD : entity work.fp23_addsub_m1
 		clk 	=> clk
 	);
 	
-AB_SUB : entity work.fp23_addsub_m1
+AB_SUB : entity work.fp23_addsub
 	generic map( td	=> td)
 	port map (
 		aa 		=> fp23_are_bre,	
@@ -230,7 +230,7 @@ AB_SUB : entity work.fp23_addsub_m1
 ---------------- FLOAT TO FIX ----------------	
 scale_z <= scale after td when rising_edge(clk);	
 
-FIX_RE : entity work.fp23_float2fix_m1
+FIX_RE : entity work.fp23_float2fix
 	generic map( td	=> td)
 	port map (
 		din 		=> fp23_cc.re,
@@ -243,7 +243,7 @@ FIX_RE : entity work.fp23_float2fix_m1
 		overflow	=> open
 	);	
 	
-FIX_IM : entity work.fp23_float2fix_m1
+FIX_IM : entity work.fp23_float2fix
 	generic map( td	=> td)
 	port map (
 		din 		=> fp23_cc.im,
