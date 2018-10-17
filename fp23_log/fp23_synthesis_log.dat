@@ -1,99 +1,124 @@
------------------------------------------------------------
+---------------------------------------------------------------------------
 --
 -- Title       : Synthesis log for all of fp23 black-boxes:
 -- Design      : fp23fftk
 -- Author      : Kapitanov Alexander
--- Company     :
+-- Company     : 
+-- E-mail      : sallador@bk.ru
 --
--- Description : Synthesis log file: 01/12/2015
+-- Description : Synthesis log file: created 01/12/2015.
 --
 -- Changelog   : Improved logic units: 11/08/2018
+-- Changelog   : Improved logic units and math arithmetic: 13/09/2018
 -- 
------------------------------------------------------------
------------------------------------------------------------
+---------------------------------------------------------------------------
+---------------------------------------------------------------------------
 
-Top Level Output File Name         : fp23_fix2float_m1
+File Name    : fp23_fix2float
 
-OLD SCHEME:                NEW SCHEME:
+OLD SCHEME:         NEW SCHEME:
 
-+------+-------+------+    +------+-------+------+			
-|      |Cell   |Count |    |      |Cell   |Count |         
-+------+-------+------+    +------+-------+------+         
-|2     |CARRY8 |     4|    |2     |CARRY8 |     2|         
-|3     |LUT1   |     0|    |3     |LUT1   |    20|         
-|4     |LUT2   |    15|    |4     |LUT2   |     4|         
-|5     |LUT3   |    20|    |5     |LUT3   |    21|         
-|6     |LUT4   |    32|    |6     |LUT4   |     6|         
-|7     |LUT5   |    10|    |7     |LUT5   |    11|         
-|8     |LUT6   |    21|    |8     |LUT6   |    22|         
-|9     |SRL16E |    18|    |9     |SRL16E |     2|         
-|10    |FDRE   |   166|    |10    |FDRE   |   118|         
-|11    |IBUF   |    19|    |11    |IBUF   |    19|         
-|12    |OBUF   |    24|    |12    |OBUF   |    24|         
-+------+-------+------+    +------+-------+------+         
-
-
-Top Level Output File Name         : fp23_float2fix_m1
-
-OLD SCHEME:                NEW SCHEME:
-
-+------+-------+------+    +------+-------+------+			
-|      |Cell   |Count |    |      |Cell   |Count |         
-+------+-------+------+    +------+-------+------+         
-|2     |CARRY8 |     2|    |2     |CARRY8 |     1|         
-|3     |LUT1   |     4|    |3     |LUT1   |     5|         
-|4     |LUT2   |     1|    |4     |LUT2   |    11|         
-|5     |LUT3   |    10|    |5     |LUT3   |    10|         
-|6     |LUT4   |     3|    |6     |LUT4   |    11|         
-|7     |LUT5   |     7|    |7     |LUT5   |    14|         
-|8     |LUT6   |    37|    |8     |LUT6   |    27|         
-|9     |SRL16E |     2|    |9     |SRL16E |     2|         
-|10    |FDRE   |    83|    |10    |FDRE   |    91|         
-|11    |IBUF   |    31|    |11    |IBUF   |    31|         
-|12    |OBUF   |    18|    |12    |OBUF   |    18|         
-+------+-------+------+    +------+-------+------+   
++-------+------+    +-------+------+	 		
+|Cell   |Count |    |Cell   |Count |       
++-------+------+    +-------+------+       
+|CARRY8 |     4|    |CARRY8 |     2|       
+|LUT1   |     0|    |LUT1   |    19|       
+|LUT2   |    15|    |LUT2   |     4|       
+|LUT3   |    20|    |LUT3   |    21|       
+|LUT4   |    32|    |LUT4   |     6|       
+|LUT5   |    10|    |LUT5   |    11|       
+|LUT6   |    21|    |LUT6   |    22|       
+|SRL16E |    18|    |SRL16E |     2|       
+|FDRE   |   166|    |FDRE   |   117|       
+|IBUF   |    19|    |IBUF   |    19|       
+|OBUF   |    24|    |OBUF   |    24|       
++-------+------+    +-------+------+       
 
 
 
-Top Level Output File Name         : fp23_addsub_m1
+File Name    : fp23_float2fix
 
-OLD SCHEME:                NEW SCHEME:
+OLD SCHEME:         NEW SCHEME:
 
-+------+-------+------+    +------+-------+------+
-|      |Cell   |Count |    |      |Cell   |Count |
-+------+-------+------+    +------+-------+------+
-|2     |CARRY8 |    18|    |2     |CARRY8 |     7|
-|3     |LUT1   |     7|    |3     |LUT1   |     6|
-|4     |LUT2   |     6|    |4     |LUT2   |    17|
-|5     |LUT3   |   116|    |5     |LUT3   |    75|
-|6     |LUT4   |    38|    |6     |LUT4   |    41|
-|7     |LUT5   |    13|    |7     |LUT5   |    20|
-|8     |LUT6   |    49|    |8     |LUT6   |    47|
-|9     |SRL16E |    49|    |9     |SRL16E |    26|
-|10    |FDRE   |   380|    |10    |FDRE   |   279|
-|11    |IBUF   |    50|    |11    |IBUF   |    50|
-|12    |OBUF   |    24|    |12    |OBUF   |    24|
-+------+-------+------+    +------+-------+------+
++-------+------+    +-------+------+			
+|Cell   |Count |    |Cell   |Count |         
++-------+------+    +-------+------+         
+|CARRY8 |     2|    |CARRY8 |     1|         
+|LUT1   |     4|    |LUT1   |     4|         
+|LUT2   |     1|    |LUT2   |    11|         
+|LUT3   |    10|    |LUT3   |    10|         
+|LUT4   |     3|    |LUT4   |    11|         
+|LUT5   |     7|    |LUT5   |    14|         
+|LUT6   |    37|    |LUT6   |    27|         
+|SRL16E |     2|    |SRL16E |     2|         
+|FDRE   |    83|    |FDRE   |    90|         
+|IBUF   |    31|    |IBUF   |    31|         
+|OBUF   |    18|    |OBUF   |    18|         
++-------+------+    +-------+------+   
 
 
 
-Top Level Output File Name         : fp23_mult_m1
+File Name    : fp23_addsub (DSP48 OFF)
 
-OLD SCHEME:                NEW SCHEME:
+OLD SCHEME:         NEW SCHEME:
 
-+------+-------+------+    +------+--------+------+
-|      |Cell   |Count |    |      |Cell    |Count |
-+------+-------+------+    +------+--------+------+
-|2     |CARRY8 |     3|    |2     |CARRY8  |     1|
-|3     |DSP48E1|     2|    |3     |DSP48E1 |     1|
-|3     |LUT1   |     1|    |4     |LUT1    |     2|
-|4     |LUT2   |     2|    |5     |LUT2    |    10|
-|5     |LUT3   |    29|    |6     |LUT3    |    18|
-|6     |LUT4   |     1|    |7     |LUT4    |     1|
-|7     |LUT5   |     2|    |8     |LUT5    |     2|
-|8     |LUT6   |     2|    |9     |LUT6    |     3|
-|9     |SRL16E |     7|    |10    |SRL16E  |     3|
-|10    |FDRE   |    69|    |11    |FDRE    |    81|
-|11    |IBUF   |    50|    |12    |IBUF    |    49|
-|12    |OBUF   |    24|    |13    |OBUF    |    24|
-+------+-------+------+    +------+--------+------+
++-------+------+    +-------+------+
+|Cell   |Count |    |Cell   |Count |
++-------+------+    +-------+------+
+|CARRY8 |    18|    |CARRY8 |     8|
+|LUT1   |     7|    |LUT1   |     4|
+|LUT2   |     6|    |LUT2   |    37|
+|LUT3   |   116|    |LUT3   |    76|
+|LUT4   |    38|    |LUT4   |    19|
+|LUT5   |    13|    |LUT5   |    19|
+|LUT6   |    49|    |LUT6   |    45|
+|SRL16E |    49|    |SRL16E |    26|
+|FDRE   |   380|    |FDRE   |   251|
+|IBUF   |    50|    |IBUF   |    49|
+|OBUF   |    24|    |OBUF   |    24|
++-------+------+    +-------+------+
+
+
+
+File Name    : fp23_addsub (DSP48 ON)
+
+OLD SCHEME:         NEW SCHEME:
+
++--------+------+    +--------+------+
+|Cell    |Count |    |Cell    |Count |
++--------+------+    +--------+------+
+|CARRY8  |    18|    |CARRY8  |     8|
+|DSP48E1 |     0|    |DSP48E1 |     1|
+|LUT1    |     7|    |LUT1    |     2|
+|LUT2    |     6|    |LUT2    |    41|
+|LUT3    |   116|    |LUT3    |    53|
+|LUT4    |    38|    |LUT4    |    25|
+|LUT5    |    13|    |LUT5    |     9|
+|LUT6    |    49|    |LUT6    |    27|
+|SRL16E  |    49|    |SRL16E  |    26|
+|FDRE    |   380|    |FDRE    |   198|
+|IBUF    |    50|    |IBUF    |    50|
+|OBUF    |    24|    |OBUF    |    24|
++--------+------+    +--------+------+
+
+
+File Name    : fp23_mult
+
+OLD SCHEME:         NEW SCHEME:
+
++-------+------+    +--------+------+
+|Cell   |Count |    |Cell    |Count |
++-------+------+    +--------+------+
+|CARRY8 |     3|    |CARRY8  |     1|
+|DSP48E1|     2|    |DSP48E1 |     1|
+|LUT1   |     1|    |LUT1    |     2|
+|LUT2   |     2|    |LUT2    |     9|
+|LUT3   |    29|    |LUT3    |    18|
+|LUT4   |     1|    |LUT4    |     1|
+|LUT5   |     2|    |LUT5    |     2|
+|LUT6   |     2|    |LUT6    |     3|
+|SRL16E |     7|    |SRL16E  |     3|
+|FDRE   |    69|    |FDRE    |    80|
+|IBUF   |    50|    |IBUF    |    49|
+|OBUF   |    24|    |OBUF    |    24|
++-------+------+    +--------+------+
